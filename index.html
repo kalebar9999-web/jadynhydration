@@ -11,6 +11,8 @@
     padding: 50px;
     background: #f4fff7;
     color: #2b593f;
+    overflow: hidden;
+    position: relative;
   }
   #count {
     font-size: 2rem;
@@ -40,6 +42,24 @@
     background: #68c28f;
     transition: width 0.3s ease;
   }
+  /* Explosion overlay */
+  #explosion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: none;
+    background: radial-gradient(circle, rgba(255,255,0,0.7) 0%, rgba(255,0,0,0.5) 50%, rgba(0,0,0,0) 100%);
+    animation: explode 3s ease-out;
+    z-index: 9999;
+  }
+  @keyframes explode {
+    0% { transform: scale(0); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -49,6 +69,7 @@
 <button onclick="cheer()">Cheers! 🥂</button>
 <button onclick="resetDay()">Reset Day</button>
 <audio id="cheersSound" src="slay.mp3"></audio>
+<div id="explosion"></div>
 
 <script>
 let cups = localStorage.getItem('cups') ? parseInt(localStorage.getItem('cups')) : 0;
@@ -60,9 +81,18 @@ function cheer() {
     cups++;
     localStorage.setItem('cups', cups);
     updateDisplay();
+    
+    // Play sound
     const sound = document.getElementById('cheersSound');
     sound.currentTime = 0;
     sound.play();
+    
+    // Show explosion
+    const explosion = document.getElementById('explosion');
+    explosion.style.display = 'block';
+    setTimeout(() => {
+      explosion.style.display = 'none';
+    }, 3000); // hide after 3 seconds
   }
 }
 
