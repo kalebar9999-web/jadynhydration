@@ -5,8 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hydration Cheers</title>
 <style>
-  body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4fff7; color: #2b593f; }
-  #count { font-size: 2rem; margin: 20px; }
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+    background: #f4fff7;
+    color: #2b593f;
+  }
+  #count {
+    font-size: 2rem;
+    margin: 20px;
+  }
   button {
     font-size: 1.5rem;
     padding: 15px 25px;
@@ -15,41 +24,59 @@
     cursor: pointer;
     background: #68c28f;
     color: white;
+    margin: 5px;
   }
-  #progressContainer { width: 80%; height: 25px; background: #ddd; border-radius: 12px; margin: 20px auto; overflow: hidden; }
-  #progressBar { width: 0%; height: 100%; background: #68c28f; transition: width 0.3s ease; }
+  #progressContainer {
+    width: 80%;
+    height: 25px;
+    background: #ddd;
+    border-radius: 12px;
+    margin: 20px auto;
+    overflow: hidden;
+  }
+  #progressBar {
+    width: 0%;
+    height: 100%;
+    background: #68c28f;
+    transition: width 0.3s ease;
+  }
 </style>
 </head>
 <body>
-  <h1>Hydration Cheers Tracker</h1>
-  <div id="count">Cups: 0</div>
-  <div id="progressContainer"><div id="progressBar"></div></div>
-  <button onclick="cheer()">Cheers! 🥂</button>
-  <button onclick="resetDay()" style="margin-left: 10px;">Reset Day</button>
-  <audio id="cheersSound" src="audio/slay.mp3"></audio>
-<script>
-  let cups = localStorage.getItem('cups') ? parseInt(localStorage.getItem('cups')) : 0;
-  const goal = 7;
-  document.getElementById('count').innerText = 'Cups: ' + cups;
-  document.getElementById('progressBar').style.width = Math.min((cups / goal) * 100, 100) + '%';
+<h1>Hydration Cheers Tracker</h1>
+<div id="count">Cups: 0</div>
+<div id="progressContainer"><div id="progressBar"></div></div>
+<button onclick="cheer()">Cheers! 🥂</button>
+<button onclick="resetDay()">Reset Day</button>
+<audio id="cheersSound" src="slay.mp3"></audio>
 
-  function cheer() {
+<script>
+let cups = localStorage.getItem('cups') ? parseInt(localStorage.getItem('cups')) : 0;
+const goal = 7; // daily goal in cups
+updateDisplay();
+
+function cheer() {
+  if (cups < goal) {
     cups++;
     localStorage.setItem('cups', cups);
-    document.getElementById('count').innerText = 'Cups: ' + cups;
-    const progress = Math.min((cups / goal) * 100, 100);
-    document.getElementById('progressBar').style.width = progress + '%';
+    updateDisplay();
     const sound = document.getElementById('cheersSound');
     sound.currentTime = 0;
     sound.play();
   }
+}
 
-  function resetDay() {
-    cups = 0;
-    localStorage.setItem('cups', cups);
-    document.getElementById('count').innerText = 'Cups: ' + cups;
-    document.getElementById('progressBar').style.width = '0%';
-  }
+function resetDay() {
+  cups = 0;
+  localStorage.setItem('cups', cups);
+  updateDisplay();
+}
+
+function updateDisplay() {
+  document.getElementById('count').innerText = 'Cups: ' + cups;
+  const progress = Math.min((cups / goal) * 100, 100);
+  document.getElementById('progressBar').style.width = progress + '%';
+}
 </script>
 </body>
 </html>
